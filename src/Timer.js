@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./App.css";
+import image from "./images/image_two.svg";
 
 function Timer({ task, minutes, goBackAndReset }) {
   const [timeLeft, setTimeLeft] = useState(null);
@@ -101,17 +102,25 @@ function Timer({ task, minutes, goBackAndReset }) {
               className="start-button rectangular"
               onClick={goBackAndReset}
               style={{
-                marginLeft: "12px",
-                fontSize: "2rem",
+                padding: "7px",
+                marginLeft: "6px",
+                fontSize: "1.8rem",
                 fontWeight: 900,
                 fontFamily: "Segoe UI, sans-serif",
               }}
             >
-              DONE
+              Done
             </button>
           </div>
         </>
       )}
+      <img
+        src={image}
+        alt="stuff"
+        style={{
+          width: "80%",
+        }}
+      />
     </div>
   );
 }

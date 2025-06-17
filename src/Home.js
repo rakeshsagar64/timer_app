@@ -20,7 +20,7 @@ function Home({ startTimer, task, minutes, setTask, setMinutes }) {
         value={task}
         onChange={(e) => setTask(e.target.value)}
         ref={taskRef}
-        placeholder="something..."
+        placeholder="Cook Maggi..."
         style={{ marginBottom: "30px" }}
       />
 
@@ -34,7 +34,9 @@ function Home({ startTimer, task, minutes, setTask, setMinutes }) {
           className="line-input short"
           value={minutes === 0 ? "" : minutes}
           onChange={(e) => setMinutes(parseInt(e.target.value, 10) || 0)}
-          placeholder="00"
+          placeholder="02"
+          min="01"
+          max="60"
         />
         <p className="minutes-label">minutes</p>
 
@@ -43,7 +45,7 @@ function Home({ startTimer, task, minutes, setTask, setMinutes }) {
             className="go-button fade-in"
             onClick={() => startTimer(task, minutes)}
           >
-            GO
+            Go
           </button>
         ) : (
           <span className="go-dot">.</span>
