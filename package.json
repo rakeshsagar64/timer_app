@@ -1,8 +1,8 @@
 {
   "name": "timer_app",
   "version": "0.1.0",
-  "homepage": "https://gitname.github.io/timer_app",
-  "private": true,
+  "homepage": "https://gitname.github.io/timerapp",
+  "private": false,
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
