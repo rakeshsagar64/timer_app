@@ -45,7 +45,11 @@ function Timer({ task, minutes, goBackAndReset }) {
   return (
     <div className="refined-layout">
       {/* 🔊 Audio element */}
-      <audio ref={audioRef} src="/sounds/alarm.mp3" preload="auto" />
+      <audio
+        ref={audioRef}
+        src={`${process.env.PUBLIC_URL}/sounds/alarm.mp3`}
+        preload="auto"
+      />
 
       {timeLeft > 0 ? (
         <>
