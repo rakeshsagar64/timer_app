@@ -1,3 +1,4 @@
+// App.js
 import React, { useState } from "react";
 import Home from "./Home";
 import Timer from "./Timer";
@@ -11,7 +12,7 @@ function App() {
 
   const startTimer = (taskInput, minutesInput) => {
     setTask(taskInput);
-    setMinutes(parseInt(minutesInput));
+    setMinutes(parseInt(minutesInput, 10));
     setTransitioning(true);
     setTimeout(() => {
       setScreen("timer");
@@ -19,9 +20,11 @@ function App() {
     }, 600);
   };
 
-  const goBack = () => {
+  const goBackAndReset = () => {
     setTransitioning(true);
     setTimeout(() => {
+      setTask("");
+      setMinutes(0);
       setScreen("home");
       setTransitioning(false);
     }, 600);
@@ -38,7 +41,13 @@ function App() {
             : ""
         }`}
       >
-        <Home startTimer={startTimer} />
+        <Home
+          startTimer={startTimer}
+          task={task}
+          minutes={minutes}
+          setTask={setTask} // ✅ Add this
+          setMinutes={setMinutes} // ✅ Add this
+        />
       </div>
 
       <div
@@ -46,7 +55,7 @@ function App() {
           screen === "timer" && !transitioning ? "screen-active" : ""
         }`}
       >
-        <Timer task={task} minutes={minutes} goBack={goBack} />
+        <Timer task={task} minutes={minutes} goBackAndReset={goBackAndReset} />
       </div>
     </div>
   );

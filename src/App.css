@@ -203,3 +203,15 @@ body {
         transform: scale(1);
     }
 }
+
+.timer-display {
+    font-weight: 900;
+    font-family: "Segoe UI", sans-serif;
+}
+
+.text-input::placeholder,
+.line-input::placeholder {
+    color: #aaa;
+    opacity: 0.6;
+    font-weight: 400;
+}
