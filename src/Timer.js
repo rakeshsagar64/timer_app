@@ -1,34 +1,57 @@
+// Timer.js
 import React, { useEffect, useState, useRef } from "react";
 import "./App.css";
 import image from "./images/image_two.svg";
 
-function Timer({ task, minutes, goBackAndReset }) {
+// ✨ Helper: Convert task string to a gerund phrase
+function convertToGerund(task) {
+  if (!task) return "";
+
+  // Remove common leading phrases like "to", "I would like to", etc.
+  let cleaned = task.trim().replace(/^.*?\bto\b\s*/i, "");
+
+  // Capitalize first letter
+  cleaned = cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+
+  const firstWord = cleaned.split(" ")[0];
+  let gerund = firstWord;
+
+  // Naive rules for gerund transformation
+  if (firstWord.match(/ie$/)) {
+    gerund = firstWord.slice(0, -2) + "ying"; // die → dying
+  } else if (firstWord.match(/e$/) && !firstWord.match(/ee$/)) {
+    gerund = firstWord.slice(0, -1) + "ing"; // bake → baking
+  } else if (!firstWord.endsWith("ing")) {
+    gerund = firstWord + "ing"; // cook → cooking
+  }
+
+  // Replace the first word with gerund
+  return gerund + cleaned.slice(firstWord.length);
+}
+
+function Timer({ task, endTime, goBackAndReset }) {
   const [timeLeft, setTimeLeft] = useState(null);
+  const intervalRef = useRef(null);
   const audioRef = useRef(null);
 
-  useEffect(() => {
-    if (minutes > 0) {
-      setTimeLeft(minutes * 60);
-    }
-  }, [minutes]);
+  const gerundTask = convertToGerund(task); // ✅ Use gerund phrase
 
   useEffect(() => {
-    if (timeLeft === null || timeLeft <= 0) return;
+    const updateRemainingTime = () => {
+      const remaining = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
+      setTimeLeft(remaining);
+      if (remaining <= 0) {
+        clearInterval(intervalRef.current);
+      }
+    };
 
-    const interval = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+    updateRemainingTime(); // Initial call
+    intervalRef.current = setInterval(updateRemainingTime, 1000);
 
-    return () => clearInterval(interval);
-  }, [timeLeft]);
+    return () => clearInterval(intervalRef.current);
+  }, [endTime]);
 
-  // 🔊 Play sound when time hits 0
+  // 🔊 Play sound when timer hits 0
   useEffect(() => {
     if (timeLeft === 0 && audioRef.current) {
       audioRef.current.play().catch((e) => {
@@ -36,6 +59,21 @@ function Timer({ task, minutes, goBackAndReset }) {
       });
     }
   }, [timeLeft]);
+
+  // 🧠 Update browser tab title with countdown
+  useEffect(() => {
+    if (timeLeft > 0) {
+      document.title = `${formatTime(timeLeft)} - ${gerundTask}`;
+    } else if (timeLeft === 0) {
+      document.title = `⏰ ${gerundTask} is done!`;
+    } else {
+      document.title = "Timer";
+    }
+
+    return () => {
+      document.title = "Timer"; // Reset on unmount
+    };
+  }, [timeLeft, gerundTask]);
 
   const formatTime = (secs) => {
     const m = String(Math.floor(secs / 60)).padStart(2, "0");
@@ -45,7 +83,7 @@ function Timer({ task, minutes, goBackAndReset }) {
 
   return (
     <div className="refined-layout">
-      {/* 🔊 Audio element */}
+      {/* 🔊 Audio */}
       <audio
         ref={audioRef}
         src={`${process.env.PUBLIC_URL}/sounds/alarm.mp3`}
@@ -58,8 +96,8 @@ function Timer({ task, minutes, goBackAndReset }) {
             className="label-text"
             style={{ fontSize: "3rem", fontWeight: 900, marginBottom: "16px" }}
           >
-            <span style={{ marginRight: "6px" }}>Finish,</span>
-            {task}
+            <span style={{ marginRight: "6px" }}>Finish</span>
+            {gerundTask}
           </p>
 
           <div className="inline-timer-line" style={{ marginBottom: "16px" }}>
@@ -78,7 +116,7 @@ function Timer({ task, minutes, goBackAndReset }) {
                 color: "#e65100",
               }}
             >
-              {timeLeft !== null ? formatTime(timeLeft) : "--:--"}
+              {formatTime(timeLeft)}
             </p>
           </div>
         </>
@@ -88,7 +126,7 @@ function Timer({ task, minutes, goBackAndReset }) {
             className="label-text"
             style={{ fontSize: "3rem", fontWeight: 900, marginBottom: "16px" }}
           >
-            {task}
+            {gerundTask}
           </p>
 
           <div className="inline-timer-line" style={{ marginBottom: "16px" }}>
@@ -114,13 +152,8 @@ function Timer({ task, minutes, goBackAndReset }) {
           </div>
         </>
       )}
-      <img
-        src={image}
-        alt="stuff"
-        style={{
-          width: "80%",
-        }}
-      />
+
+      <img src={image} alt="Timer illustration" style={{ width: "80%" }} />
     </div>
   );
 }

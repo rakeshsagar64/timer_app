@@ -8,12 +8,18 @@ function App() {
   const [screen, setScreen] = useState("home");
   const [task, setTask] = useState("");
   const [minutes, setMinutes] = useState(0);
+  const [endTime, setEndTime] = useState(null);
   const [transitioning, setTransitioning] = useState(false);
 
   const startTimer = (taskInput, minutesInput) => {
+    const parsedMinutes = parseInt(minutesInput, 10);
+    if (!taskInput.trim() || parsedMinutes <= 0) return;
+
     setTask(taskInput);
-    setMinutes(parseInt(minutesInput, 10));
+    setMinutes(parsedMinutes);
+    setEndTime(Date.now() + parsedMinutes * 60 * 1000); // ✅ Set endTime based on "Go" click
     setTransitioning(true);
+
     setTimeout(() => {
       setScreen("timer");
       setTransitioning(false);
@@ -25,6 +31,7 @@ function App() {
     setTimeout(() => {
       setTask("");
       setMinutes(0);
+      setEndTime(null);
       setScreen("home");
       setTransitioning(false);
     }, 600);
@@ -45,8 +52,8 @@ function App() {
           startTimer={startTimer}
           task={task}
           minutes={minutes}
-          setTask={setTask} // ✅ Add this
-          setMinutes={setMinutes} // ✅ Add this
+          setTask={setTask}
+          setMinutes={setMinutes}
         />
       </div>
 
@@ -55,7 +62,13 @@ function App() {
           screen === "timer" && !transitioning ? "screen-active" : ""
         }`}
       >
-        <Timer task={task} minutes={minutes} goBackAndReset={goBackAndReset} />
+        {endTime && (
+          <Timer
+            task={task}
+            endTime={endTime}
+            goBackAndReset={goBackAndReset}
+          />
+        )}
       </div>
     </div>
   );

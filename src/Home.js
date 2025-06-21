@@ -1,3 +1,4 @@
+// Home.js
 import React, { useEffect, useRef } from "react";
 import "./App.css";
 
@@ -10,8 +11,14 @@ function Home({ startTimer, task, minutes, setTask, setMinutes }) {
 
   const isFormFilled = task.trim() !== "" && minutes > 0;
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && isFormFilled) {
+      startTimer(task, minutes);
+    }
+  };
+
   return (
-    <div className="refined-layout">
+    <div className="refined-layout" onKeyDown={handleKeyDown}>
       <p className="label-text">I would like to</p>
 
       <input
@@ -35,7 +42,7 @@ function Home({ startTimer, task, minutes, setTask, setMinutes }) {
           value={minutes === 0 ? "" : minutes}
           onChange={(e) => setMinutes(parseInt(e.target.value, 10) || 0)}
           placeholder="02"
-          min="01"
+          min="1"
           max="60"
         />
         <p className="minutes-label">minutes</p>
