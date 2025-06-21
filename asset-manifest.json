@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/timerapp/static/css/main.ead32b12.css",
-    "main.js": "/timerapp/static/js/main.e98b236b.js",
+    "main.js": "/timerapp/static/js/main.1dab6983.js",
     "static/media/image_two.svg": "/timerapp/static/media/image_two.219b26f64c6bef13f50775816e1ee03e.svg",
     "index.html": "/timerapp/index.html",
     "main.ead32b12.css.map": "/timerapp/static/css/main.ead32b12.css.map",
-    "main.e98b236b.js.map": "/timerapp/static/js/main.e98b236b.js.map"
+    "main.1dab6983.js.map": "/timerapp/static/js/main.1dab6983.js.map"
   },
   "entrypoints": [
     "static/css/main.ead32b12.css",
-    "static/js/main.e98b236b.js"
+    "static/js/main.1dab6983.js"
   ]
 }
